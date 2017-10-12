@@ -5,7 +5,7 @@
     "build": "preact build",
     "dev": "preact watch",
     "esdoc": "./node_modules/.bin/esdoc",
-    "prepublish": "npm lint",
+    "prepublish": "npm run lint",
     "serve": "preact build && preact serve",
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
     "lint": "eslint ."

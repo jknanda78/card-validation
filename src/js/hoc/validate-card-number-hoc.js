@@ -14,9 +14,15 @@ const ValidateCardNumberHOC = WrappedComponent => {
 			return errKey;
 		}
 
-		onBlurHandler = e => {
+		onKeyUpHandler = e => {
+			this.setState({
+				error: {}
+			});
+		}
+
+		onBlurHandler = (e, cardType, cardLength) => {
 			const props = this.props;
-			const errMsg = this.cardNumber(e.target.value, this.state.cardType, this.state.cardLength);
+			const errMsg = this.cardNumber(e.target.value, cardType, cardLength);
 
 			if (errMsg) {
 				this.setState({
@@ -25,17 +31,23 @@ const ValidateCardNumberHOC = WrappedComponent => {
 					}
 				});
 			}
+			else {
+				this.setState({
+					error: {}
+				});
+			}
 		}
 
 		constructor(props) {
 			super(props);
 
 			this.onBlurHandler = this.onBlurHandler.bind(this);
+			this.onKeyUpHandler = this.onKeyUpHandler.bind(this);
 		}
 
 		render() {
 			return (
-				<WrappedComponent {...this.props} {...this.state} onBlurHandler={this.onBlurHandler} />
+				<WrappedComponent {...this.props} {...this.state} onBlurHandler={this.onBlurHandler} onKeyUpHandler={this.onKeyUpHandler} />
 			);
 		}
 	}

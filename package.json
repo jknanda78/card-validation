@@ -5,10 +5,10 @@
     "build": "preact build",
     "dev": "preact watch",
     "esdoc": "./node_modules/.bin/esdoc",
-    "prepublish": "npm run lint",
+    "prepublish": "npm test",
     "serve": "preact build && preact serve",
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "lint": "eslint ."
+    "test": "eslint src && jest"
   },
   "repository": {
     "type": "git",

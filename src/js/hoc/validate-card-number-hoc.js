@@ -1,11 +1,36 @@
 import { h, Component } from 'preact';
 
-const ValidateCardNumberHOC = WrappedComponent => {
+const validateCardNumberHOC = WrappedComponent => {
 	class HOC extends Component {
-		cardNumber = (inputVal, cardType, cardLen) => {
+		getCardLenth = cardFirstDigit => {
+			const fistDigit = parseInt(cardFirstDigit, 10);
+			let cardLength;
+
+			switch (fistDigit) {
+				case 3:
+					cardLength = 15;
+					break;
+				case 4:
+				case 5:
+				case 6:
+					cardLength = 16;
+					break;
+				default:
+					cardLength = 0;
+					break;
+			}
+
+			return cardLength;
+		}
+
+		cardNumber = (inputVal, cardLen) => {
 			let errKey = null;
 
 			if (inputVal) {
+				if (!cardLen) {
+					cardLen = this.getCardLenth(inputVal.charAt(0));
+				}
+
 				if (inputVal.replace(/\s/g, '').length !== cardLen) {
 					errKey = 'cardNumber.length.mismatch';
 				}
@@ -20,9 +45,9 @@ const ValidateCardNumberHOC = WrappedComponent => {
 			});
 		}
 
-		validationOnBlur = (e, cardType, cardLength) => {
+		validationOnBlur = (e, cardLength) => {
 			const props = this.props;
-			const errMsg = this.cardNumber(e.target.value, cardType, cardLength);
+			const errMsg = this.cardNumber(e.target.value, cardLength);
 
 			if (errMsg) {
 				this.setState({
@@ -56,4 +81,4 @@ const ValidateCardNumberHOC = WrappedComponent => {
 	return HOC;
 };
 
-export default ValidateCardNumberHOC;
+export default validateCardNumberHOC;

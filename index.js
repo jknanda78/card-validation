@@ -1,3 +1,3 @@
-import ValidateCardNumberHOC from './src/js/hoc/validate-card-number-hoc';
+import validateCardNumberHOC from './src/js/hoc/validate-card-number-hoc';
 
-export { ValidateCardNumberHOC };
+export { validateCardNumberHOC };

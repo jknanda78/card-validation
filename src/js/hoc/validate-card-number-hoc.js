@@ -4,23 +4,34 @@ const validateCardNumberHOC = WrappedComponent => {
 	class HOC extends Component {
 		getCardLenth = cardFirstDigit => {
 			const fistDigit = parseInt(cardFirstDigit, 10);
-			let cardLength;
 
 			switch (fistDigit) {
 				case 3:
-					cardLength = 15;
-					break;
+					return {
+						type: 'American Express',
+						length: 15
+					};
 				case 4:
+					return {
+						type: 'VISA',
+						length: 16
+					};
 				case 5:
+					return {
+						type: 'MasterCard',
+						length: 16
+					};
 				case 6:
-					cardLength = 16;
-					break;
+					return {
+						type: 'Discover',
+						length: 16
+					};
 				default:
-					cardLength = 0;
-					break;
+					return {
+						type: '',
+						length: 0
+					};
 			}
-
-			return cardLength;
 		}
 
 		cardNumber = (inputVal, cardLen) => {
@@ -28,7 +39,12 @@ const validateCardNumberHOC = WrappedComponent => {
 
 			if (inputVal) {
 				if (!cardLen) {
-					cardLen = this.getCardLenth(inputVal.charAt(0));
+					const card = this.getCardLenth(inputVal.charAt(0));
+
+					cardLen = card.length;
+					this.setState({
+						cardType: card.type
+					});
 				}
 
 				if (inputVal.replace(/\s/g, '').length !== cardLen) {
@@ -39,7 +55,16 @@ const validateCardNumberHOC = WrappedComponent => {
 			return errKey;
 		}
 
-		validationOnKeyUp = e => {
+		validationOnKeyUp = (e, cardLength) => {
+			if (!cardLength) {
+				const inputVal = e.target.value;
+				const card = this.getCardLenth(inputVal.charAt(0));
+
+				this.setState({
+					cardType: card.type
+				});
+			}
+
 			this.setState({
 				error: {}
 			});
@@ -72,7 +97,12 @@ const validateCardNumberHOC = WrappedComponent => {
 
 		render() {
 			return (
-				<WrappedComponent {...this.props} {...this.state} validationOnBlur={this.validationOnBlur} validationOnKeyUp={this.validationOnKeyUp} />
+				<WrappedComponent
+					{...this.props}
+					{...this.state}
+					validationOnBlur={this.validationOnBlur}
+					validationOnKeyUp={this.validationOnKeyUp}
+				/>
 			);
 		}
 	}

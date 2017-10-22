@@ -55,24 +55,26 @@ const validateCardNumberHOC = WrappedComponent => {
 			return errKey;
 		}
 
-		validationOnKeyUp = (e, cardLength) => {
-			if (!cardLength) {
-				const inputVal = e.target.value;
-				const card = this.getCardLenth(inputVal.charAt(0));
-
-				this.setState({
-					cardType: card.type
-				});
-			}
+		validationOnKeyUp = (e) => {
+			console.log('validateCardNumberHOC::onKeyUp'); //eslint-disable-line
+			const inputVal = e.target.value;
+			const card = this.getCardLenth(inputVal.charAt(0));
 
 			this.setState({
+				cardType: card.type,
+				cardLength: card.length,
 				error: {}
 			});
+
+			if (this.props.onKeyUp) {
+				this.props.onKeyUp(e, this.state.cardType);
+			}
 		}
 
-		validationOnBlur = (e, cardLength) => {
+		validationOnBlur = (e) => {
+			console.log('validateCardNumberHOC::onBlur');
 			const props = this.props;
-			const errMsg = this.cardNumber(e.target.value, cardLength);
+			const errMsg = this.cardNumber(e.target.value, this.state.cardLength);
 
 			if (errMsg) {
 				this.setState({
@@ -86,13 +88,10 @@ const validateCardNumberHOC = WrappedComponent => {
 					error: {}
 				});
 			}
-		}
 
-		constructor(props) {
-			super(props);
-
-			this.validationOnBlur = this.validationOnBlur.bind(this);
-			this.validationOnKeyUp = this.validationOnKeyUp.bind(this);
+			if (this.props.onBlur) {
+				this.props.onBlur(e);
+			}
 		}
 
 		render() {
@@ -100,8 +99,8 @@ const validateCardNumberHOC = WrappedComponent => {
 				<WrappedComponent
 					{...this.props}
 					{...this.state}
-					validationOnBlur={this.validationOnBlur}
-					validationOnKeyUp={this.validationOnKeyUp}
+					onBlur={this.validationOnBlur}
+					onKeyUp={this.validationOnKeyUp}
 				/>
 			);
 		}
